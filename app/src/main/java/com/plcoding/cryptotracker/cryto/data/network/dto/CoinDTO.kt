@@ -1,6 +1,9 @@
-package com.plcoding.cryptotracker.cryto.domain.model
+package com.plcoding.cryptotracker.cryto.data.network.dto
 
-data class Coin(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class CoinDTO(
     val id: String,
     val rank: Int,
     val name: String,
