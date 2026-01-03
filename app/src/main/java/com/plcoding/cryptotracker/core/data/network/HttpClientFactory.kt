@@ -31,7 +31,7 @@ object HttpClientFactory {
             }
             defaultRequest {
                 contentType(type = ContentType.Application.Json)
-                header("Authentication", "Bearer ${BuildConfig.API_KEY}")
+                header("Authorization", "Bearer ${BuildConfig.API_KEY}")
             }
         }
     }
