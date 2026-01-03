@@ -1,5 +1,6 @@
 package com.plcoding.cryptotracker.cryto.presentation.coin_list
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.cryptotracker.core.domain.util.onError
@@ -36,21 +37,16 @@ class CoinListViewModel(
     }
     private fun loadCoins() {
         viewModelScope.launch {
-            _state.update { it.copy(
-                isLoading = true
-            ) }
+            _state.update { it.copy(isLoading = true) }
 
-            coinDataSource
-                .getCoins()
-                .onSuccess { coins ->
-                    _state.update { it.copy(
-                        isLoading = false,
-                        coins = coins.map { it.toCoinUiState() }
-                    ) }
-                }
-                .onError { error ->
-                    _state.update { it.copy(isLoading = false) }
-                }
+            coinDataSource.getCoins().onSuccess { coins ->
+                // Log the received coins
+                Log.d("CoinListViewModel", "Received coins: $coins")
+                _state.update { it.copy(isLoading = false, coins = coins.map { it.toCoinUiState() }) }
+            }.onError { error ->
+                Log.e("CoinListViewModel", "Error fetching coins: $error")
+                _state.update { it.copy(isLoading = false) }
+            }
         }
     }
 }
