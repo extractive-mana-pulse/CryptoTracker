@@ -59,7 +59,7 @@ https://github.com/user-attachments/assets/0d298676-eafc-427b-bbea-1b8e2ec591ef
 
 You can download the latest stable version of the app from the GitHub Releases page.
 
-👉 **[Download here](https://github.com/extractice-mana-pulse/CryptoTracker/releases)**
+👉 **[Download here](https://github.com/extractive-mana-pulse/CryptoTracker/releases/tag/v1.0.0)**
 
 > All APK files are published under the **Releases** section, along with version notes and changelogs.
 
