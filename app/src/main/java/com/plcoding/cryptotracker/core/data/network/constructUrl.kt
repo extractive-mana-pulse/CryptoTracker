@@ -2,10 +2,13 @@ package com.plcoding.cryptotracker.core.data.network
 
 import com.plcoding.cryptotracker.BuildConfig
 
-fun constructUrl(url: String): String {
+fun constructUrl(url: String, baseUrl: String = BuildConfig.BASE_URL): String {
     return when {
-        url.contains(BuildConfig.BASE_URL) -> url
-        url.startsWith("/") -> BuildConfig.BASE_URL + url.drop(1)
-        else -> BuildConfig.BASE_URL + "/" + url
+        url.contains(baseUrl) -> url
+        else -> {
+            val normalizedBase = baseUrl.removeSuffix("/")
+            val normalizedUrl = url.removePrefix("/")
+            "$normalizedBase/$normalizedUrl"
+        }
     }
 }

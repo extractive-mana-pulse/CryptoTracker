@@ -35,4 +35,22 @@ object HttpClientFactory {
             }
         }
     }
+    fun createGitHub(engine: HttpClientEngine): HttpClient {
+        return HttpClient(engine) {
+            install(Logging) {
+                logger = Logger.ANDROID
+                level = LogLevel.ALL
+            }
+            install(ContentNegotiation) {
+                json(
+                    json = Json {
+                        ignoreUnknownKeys = true
+                    }
+                )
+            }
+            defaultRequest {
+                contentType(type = ContentType.Application.Json)
+            }
+        }
+    }
 }

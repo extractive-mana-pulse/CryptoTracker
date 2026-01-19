@@ -8,4 +8,8 @@
     <string name="market_cap">Market Cap</string>
     <string name="price">Price</string>
     <string name="change_last_24h">Change last 24h</string>
+    <string name="release_footer">Thank you for using CryptoTracker! 🚀</string>
+    <string name="version_info">Version Info</string>
+    <string name="stable_release">Latest stable release\n</string>
+    <string name="available_update">NEW UPDATE AVAILABLE</string>
 </resources>
