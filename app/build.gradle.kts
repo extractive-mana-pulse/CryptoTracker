@@ -23,7 +23,7 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -71,6 +71,8 @@ dependencies {
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.navigation.runtime.ktx)
     debugImplementation(libs.bundles.compose.debug)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
@@ -85,4 +87,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.runtime.ktx)
 }

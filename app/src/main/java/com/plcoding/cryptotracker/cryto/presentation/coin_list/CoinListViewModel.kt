@@ -1,6 +1,5 @@
 package com.plcoding.cryptotracker.cryto.presentation.coin_list
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.cryptotracker.core.domain.util.onError
@@ -12,7 +11,6 @@ import com.plcoding.cryptotracker.cryto.presentation.model.toCoinUiState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
