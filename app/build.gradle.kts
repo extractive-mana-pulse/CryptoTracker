@@ -92,4 +92,6 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.runtime.ktx)
+
+    implementation ("io.noties.markwon:core:4.6.2")
 }
