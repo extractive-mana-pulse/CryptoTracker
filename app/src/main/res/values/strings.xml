@@ -12,4 +12,5 @@
     <string name="version_info">Version Info</string>
     <string name="stable_release">Latest stable release\n</string>
     <string name="available_update">NEW UPDATE AVAILABLE</string>
+    <string name="widget_xml_info">Realtime monitoring device temperature widget.</string>
 </resources>
