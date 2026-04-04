@@ -27,14 +27,25 @@
         </activity>
 
         <receiver
-            android:name=".widget.CoinWidgetReceiver"
+            android:name=".widget.CompactCoinWidgetReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/coin_widget"/>
+                android:resource="@xml/compact_coin_widget"/>
+        </receiver>
+
+        <receiver
+            android:name=".widget.ChartCoinWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/chart_coin_widget"/>
         </receiver>
 
     </application>

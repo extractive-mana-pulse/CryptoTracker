@@ -31,7 +31,9 @@ fun renderLineChartBitmap(
     showHelperLines: Boolean = true,
     widthPx: Int,
     heightPx: Int,
-    density: Float = 3f
+    density: Float = 3f,
+    xLabelLineSpacingPx: Float = 4f,
+    xLabelTopPaddingPx: Float = 0f
 ): Bitmap {
     fun Dp.toPx() = value * density
     fun TextUnit.toPx() = value * density
@@ -70,7 +72,7 @@ fun renderLineChartBitmap(
     }
 
     val xLabelLineHeight = if (maxXLabelLines > 0) maxXLabelHeight else 0
-    val totalXLabelHeight = xLabelLineHeight * maxXLabelLines + (maxXLabelLines - 1) * 4
+    val totalXLabelHeight = xLabelLineHeight * maxXLabelLines + (maxXLabelLines - 1) * xLabelLineSpacingPx
     val viewPortHeightPx = heightPx - (totalXLabelHeight + 2 * verticalPaddingPx + xLabelLineHeight + xAxisLabelSpacingPx)
 
     val labelViewPortHeightPx = viewPortHeightPx + xLabelLineHeight
@@ -101,7 +103,8 @@ fun renderLineChartBitmap(
         labelPaint.color = if (isSelected) style.selectedColor.toArgb() else style.unselectedColor.toArgb()
 
         dp.xLabel.split("\n").forEachIndexed { lineIdx, line ->
-            val lineY = viewPortBottomY + xAxisLabelSpacingPx + xLabelLineHeight * (lineIdx + 1)
+            val lineY = viewPortBottomY + xAxisLabelSpacingPx + xLabelTopPaddingPx +
+                xLabelLineHeight * (lineIdx + 1) + xLabelLineSpacingPx * lineIdx
             canvas.drawText(line, centerX - labelPaint.measureText(line) / 2f, lineY, labelPaint)
         }
 
@@ -220,7 +223,9 @@ fun GlanceLineChart(
     showHelperLines: Boolean = true,
     widthPx: Int = 700,
     heightPx: Int = 300,
-    density: Float = 3f
+    density: Float = 3f,
+    xLabelLineSpacingPx: Float = 4f,
+    xLabelTopPaddingPx: Float = 0f
 ) {
     val bitmap = remember(dataPoints, visibleDataPointsIndices, selectedDataPoint, widthPx, heightPx) {
         renderLineChartBitmap(
@@ -232,7 +237,9 @@ fun GlanceLineChart(
             showHelperLines = showHelperLines,
             widthPx = widthPx,
             heightPx = heightPx,
-            density = density
+            density = density,
+            xLabelLineSpacingPx = xLabelLineSpacingPx,
+            xLabelTopPaddingPx = xLabelTopPaddingPx
         )
     }
 

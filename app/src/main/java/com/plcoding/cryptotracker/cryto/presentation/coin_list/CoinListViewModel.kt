@@ -1,5 +1,7 @@
 package com.plcoding.cryptotracker.cryto.presentation.coin_list
 
+import android.content.Context
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.cryptotracker.core.domain.util.onError
@@ -8,6 +10,9 @@ import com.plcoding.cryptotracker.cryto.domain.CoinDataSource
 import com.plcoding.cryptotracker.cryto.presentation.coin_detail.DataPoint
 import com.plcoding.cryptotracker.cryto.presentation.model.CoinUiState
 import com.plcoding.cryptotracker.cryto.presentation.model.toCoinUiState
+import com.plcoding.cryptotracker.widget.data.WidgetCoinRepository
+import com.plcoding.cryptotracker.widget.presentation.ChartCoinWidget
+import com.plcoding.cryptotracker.widget.presentation.CompactCoinWidget
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,7 +25,9 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class CoinListViewModel(
-    private val coinDataSource: CoinDataSource
+    private val coinDataSource: CoinDataSource,
+    private val widgetCoinRepository: WidgetCoinRepository,
+    private val appContext: Context
 ): ViewModel() {
 
     private val _state = MutableStateFlow(CoinListState())
@@ -40,6 +47,112 @@ class CoinListViewModel(
             is CoinListAction.OnCoinClick -> {
                 selectCoin(action.coinUi)
             }
+            is CoinListAction.OnToggleFavorite -> {
+                toggleFavorite(action.coinUi)
+            }
+            is CoinListAction.OnSetWidgetCoin -> {
+                setWidgetCoin(action.coinUi)
+            }
+        }
+    }
+
+    private fun setWidgetCoin(coinUi: CoinUiState) {
+        viewModelScope.launch {
+            val isFavorite = widgetCoinRepository.isFavorite(coinUi.id)
+            if (!isFavorite) return@launch
+
+            coinDataSource
+                .getCoinHistory(
+                    coinId = coinUi.id,
+                    start = ZonedDateTime.now().minusDays(7),
+                    end = ZonedDateTime.now()
+                )
+                .onSuccess { history ->
+                    val dataPoints = history
+                        .sortedBy { it.dateTime }
+                        .map {
+                            DataPoint(
+                                x = it.dateTime.hour.toFloat(),
+                                y = it.priceUsd.toFloat(),
+                                xLabel = DateTimeFormatter
+                                    .ofPattern("ha\nM/d")
+                                    .format(it.dateTime)
+                            )
+                        }
+                    widgetCoinRepository.saveSelected(
+                        coinId = coinUi.id,
+                        coinName = coinUi.name,
+                        coinSymbol = coinUi.symbol,
+                        priceUsd = coinUi.priceUsd.value,
+                        changePercent24Hr = coinUi.changePercent24Hr.value,
+                        history = history
+                    )
+                    widgetCoinRepository.setPreferredWidgetCoinId(coinUi.id)
+                    widgetCoinRepository.markUpdated()
+                    _state.update {
+                        val withHistory = it.coins.map { coin ->
+                            if (coin.id == coinUi.id) coin.copy(coinPriceHistory = dataPoints) else coin
+                        }
+                        it.copy(
+                            coins = withHistory,
+                            widgetCoinId = coinUi.id,
+                            selectedCoin = withHistory.firstOrNull { coin -> coin.id == coinUi.id }
+                        )
+                    }
+                    refreshGlanceWidget()
+                }
+                .onError { error ->
+                    _events.send(CoinListEvent.Error(error))
+                }
+        }
+    }
+
+    private fun toggleFavorite(coinUi: CoinUiState) {
+        viewModelScope.launch {
+            val isFavorite = widgetCoinRepository.isFavorite(coinUi.id)
+            if (isFavorite) {
+                widgetCoinRepository.removeFavorite(coinUi.id)
+                widgetCoinRepository.markUpdated()
+                _state.update {
+                    it.copy(
+                        favoriteCoinIds = it.favoriteCoinIds - coinUi.id,
+                        widgetCoinId = if (it.widgetCoinId == coinUi.id) null else it.widgetCoinId
+                    )
+                }
+                refreshGlanceWidget()
+                return@launch
+            }
+
+            coinDataSource
+                .getCoinHistory(
+                    coinId = coinUi.id,
+                    start = ZonedDateTime.now().minusDays(7),
+                    end = ZonedDateTime.now()
+                )
+                .onSuccess { history ->
+                    widgetCoinRepository.saveSelected(
+                        coinId = coinUi.id,
+                        coinName = coinUi.name,
+                        coinSymbol = coinUi.symbol,
+                        priceUsd = coinUi.priceUsd.value,
+                        changePercent24Hr = coinUi.changePercent24Hr.value,
+                        history = history
+                    )
+                    widgetCoinRepository.markUpdated()
+                    _state.update {
+                        val nextFavorites = it.favoriteCoinIds + coinUi.id
+                        val preferred = it.widgetCoinId ?: coinUi.id
+                        widgetCoinRepository.setPreferredWidgetCoinId(preferred)
+                        it.copy(
+                            favoriteCoinIds = nextFavorites,
+                            widgetCoinId = preferred
+                        )
+                    }
+                    refreshGlanceWidget()
+                }
+                .onError { error ->
+                    _events.send(CoinListEvent.Error(error))
+                }
         }
     }
 
@@ -82,6 +195,12 @@ class CoinListViewModel(
 
     private fun loadCoins() {
         viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    favoriteCoinIds = widgetCoinRepository.getFavoriteCoinIds(),
+                    widgetCoinId = widgetCoinRepository.getPreferredWidgetCoinId()
+                )
+            }
             _state.update { it.copy(
                 isLoading = true
             ) }
@@ -89,9 +208,24 @@ class CoinListViewModel(
             coinDataSource
                 .getCoins()
                 .onSuccess { coins ->
+                    val widgetCoinId = _state.value.widgetCoinId
+                    val widgetCoin = widgetCoinId?.let { id ->
+                        widgetCoinRepository.getFavoriteByCoinId(id)
+                    }
+                    val widgetHistory = widgetCoin?.let {
+                        widgetCoinRepository.decodeDataPoints(it.dataPointsJson)
+                    } ?: emptyList()
+
                     _state.update { it.copy(
                         isLoading = false,
-                        coins = coins.map { it.toCoinUiState() }
+                        coins = coins.map { coin ->
+                            val ui = coin.toCoinUiState()
+                            if (coin.id == widgetCoinId) {
+                                ui.copy(coinPriceHistory = widgetHistory)
+                            } else {
+                                ui
+                            }
+                        }
                     ) }
                 }
                 .onError { error ->
@@ -99,5 +233,17 @@ class CoinListViewModel(
                     _events.send(CoinListEvent.Error(error))
                 }
         }
+    }
+
+    private suspend fun refreshGlanceWidget() {
+        try {
+            val manager = GlanceAppWidgetManager(appContext)
+            manager.getGlanceIds(CompactCoinWidget::class.java).forEach { 
+                CompactCoinWidget().update(appContext, it) 
+            }
+            manager.getGlanceIds(ChartCoinWidget::class.java).forEach { 
+                ChartCoinWidget().update(appContext, it) 
+            }
+        } catch (_: Exception) {}
     }
 }
