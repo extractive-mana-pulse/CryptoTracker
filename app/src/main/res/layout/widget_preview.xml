@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="320dp"
+    android:layout_height="200dp"
+    android:background="@drawable/widget_background"
+    android:padding="16dp">
+
+    <!-- Header: coin icon + name + symbol -->
+    <LinearLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:id="@+id/coin_icon"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/btc" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp">
+
+            <TextView
+                android:id="@+id/coin_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bitcoin"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/coin_symbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BTC"
+                android:textColor="#AAFFFFFF"
+                android:textSize="10sp"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+        <!-- Price + change badge -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end">
+
+            <TextView
+                android:id="@+id/coin_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$62,430"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/coin_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:text="▲ 2.4%"
+                android:textColor="#FFFFFF"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/refresh_button"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="8dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Refresh"
+            android:src="@drawable/twotone_refresh_24"
+            android:tint="#AAFFFFFF"
+            tools:ignore="HardcodedText,UseAppTint" />
+
+    </LinearLayout>
+
+    <!-- Chart area -->
+    <LinearLayout
+        android:id="@+id/chart_area"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@id/header_layout"
+        android:layout_above="@id/footer_layout"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="6dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:gravity="bottom">
+
+        <!-- Y axis labels -->
+        <LinearLayout
+            android:layout_width="36dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="65K"
+                android:textColor="#88FFFFFF"
+                android:textSize="7sp"
+                android:gravity="center"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="62K"
+                android:textColor="#88FFFFFF"
+                android:textSize="7sp"
+                android:gravity="center"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="59K"
+                android:textColor="#88FFFFFF"
+                android:textSize="7sp"
+                android:gravity="center"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+        <!-- Bars -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="bottom"
+            android:layout_marginStart="4dp">
+
+            <!-- Mon -->
+            <LinearLayout
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="bottom|center_horizontal">
+                <TextView
+                    android:layout_width="3dp"
+                    android:layout_height="42dp"
+                    android:background="#AAFFFFFF"
+                    android:text=" " />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="M"
+                    android:textColor="#88FFFFFF"
+                    android:textSize="7sp"
+                    android:layout_marginTop="4dp"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <!-- Tue -->
+            <LinearLayout
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="bottom|center_horizontal">
+                <TextView
+                    android:layout_width="3dp"
+                    android:layout_height="42dp"
+                    android:background="#AAFFFFFF"
+                    android:text=" " />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="T"
+                    android:textColor="#88FFFFFF"
+                    android:textSize="7sp"
+                    android:layout_marginTop="4dp"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <!-- Wed -->
+            <LinearLayout
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="bottom|center_horizontal">
+                <TextView
+                    android:layout_width="3dp"
+                    android:layout_height="42dp"
+                    android:background="#AAFFFFFF"
+                    android:text=" " />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="W"
+                    android:textColor="#88FFFFFF"
+                    android:textSize="7sp"
+                    android:layout_marginTop="4dp"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <!-- Thu -->
+            <LinearLayout
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="bottom|center_horizontal">
+                <TextView
+                    android:layout_width="3dp"
+                    android:layout_height="42dp"
+                    android:background="#AAFFFFFF"
+                    android:text=" " />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="T"
+                    android:textColor="#88FFFFFF"
+                    android:textSize="7sp"
+                    android:layout_marginTop="4dp"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <!-- Fri -->
+            <LinearLayout
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="bottom|center_horizontal">
+                <TextView
+                    android:layout_width="3dp"
+                    android:layout_height="42dp"
+                    android:background="#AAFFFFFF"
+                    android:text=" " />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="F"
+                    android:textColor="#88FFFFFF"
+                    android:textSize="7sp"
+                    android:layout_marginTop="4dp"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <!-- Sat -->
+            <LinearLayout
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="bottom|center_horizontal">
+                <TextView
+                    android:layout_width="3dp"
+                    android:layout_height="42dp"
+                    android:background="#AAFFFFFF"
+                    android:text=" " />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S"
+                    android:textColor="#88FFFFFF"
+                    android:textSize="7sp"
+                    android:layout_marginTop="4dp"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+            <!-- Sun (selected/today) -->
+            <LinearLayout
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="bottom|center_horizontal">
+                <TextView
+                    android:layout_width="3dp"
+                    android:layout_height="42dp"
+                    android:background="#AAFFFFFF"
+                    android:text=" " />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="7sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp"
+                    tools:ignore="HardcodedText" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Footer: last updated -->
+    <TextView
+        android:id="@+id/footer_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:text="Updated just now"
+        android:textColor="#88FFFFFF"
+        android:textSize="8sp"
+        tools:ignore="HardcodedText" />
+
+    <!-- Timeframe label bottom right -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:text="7D"
+        android:textColor="#AAFFFFFF"
+        android:textSize="8sp"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText" />
+
+</RelativeLayout>

@@ -2,7 +2,10 @@ package com.plcoding.cryptotracker.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,6 +25,7 @@ fun CryptoTrackerDefaultScreen(
     showTopBar: Boolean,
     topBarTitle: String? = null,
     onNavigateUp: (() -> Unit)? = null,
+    onNavigateToFavorites: () -> Unit = {},
     onNavigateToSettings: () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
@@ -34,13 +38,19 @@ fun CryptoTrackerDefaultScreen(
                     topBarTitle = topBarTitle,
                     action = {
                         if (topBarTitle == "Crypto Tracker") {
-                            IconButton(
-                                onClick = onNavigateToSettings
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.outline_settings_24),
-                                    contentDescription = null
-                                )
+                            Row {
+                                IconButton(onClick = onNavigateToFavorites) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.StarOutline,
+                                        contentDescription = "Favorites"
+                                    )
+                                }
+                                IconButton(onClick = onNavigateToSettings) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.outline_settings_24),
+                                        contentDescription = "Settings"
+                                    )
+                                }
                             }
                         }
                     },
