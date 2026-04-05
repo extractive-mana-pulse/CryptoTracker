@@ -1,6 +1,5 @@
 package com.plcoding.cryptotracker.widget.presentation
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -39,10 +38,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.plcoding.cryptotracker.cryto.domain.model.Coin
 import com.plcoding.cryptotracker.cryto.presentation.coin_detail.ChartStyle
 import com.plcoding.cryptotracker.cryto.presentation.coin_detail.LineChart
-import com.plcoding.cryptotracker.widget.data.db.WidgetCoin
+import com.plcoding.cryptotracker.widget.domain.model.WidgetCoinItem
 import org.koin.androidx.compose.koinViewModel
 import kotlin.math.abs
 
+/**
+ * In-app widget configuration card.
+ *
+ * Allows the user to pick a coin from a dropdown and previews
+ * how it will appear on the home screen widget.
+ * All state is driven by [CoinChartWidgetViewModel].
+ */
 @Composable
 fun CoinChartWidget(
     modifier: Modifier = Modifier,
@@ -95,12 +101,14 @@ fun CoinChartWidget(
                     CircularProgressIndicator()
                 }
             }
+
             selectedCoin != null -> {
                 CoinChartPreview(
                     coin = selectedCoin!!,
                     viewModel = viewModel
                 )
             }
+
             else -> {
                 Box(
                     modifier = Modifier
@@ -121,6 +129,10 @@ fun CoinChartWidget(
     }
 }
 
+/**
+ * Dropdown that lists all available [coins] and highlights the currently [selectedId].
+ * Disabled while [isLoading] is true or the coin list is empty.
+ */
 @Composable
 private fun CoinDropdown(
     coins: List<Coin>,
@@ -138,9 +150,7 @@ private fun CoinDropdown(
                 .clip(RoundedCornerShape(8.dp))
                 .background(MaterialTheme.colorScheme.surface)
                 .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
-                .clickable(enabled = !isLoading && coins.isNotEmpty()) {
-                    expanded = !expanded
-                }
+                .clickable(enabled = !isLoading && coins.isNotEmpty()) { expanded = !expanded }
                 .padding(horizontal = 12.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -164,41 +174,7 @@ private fun CoinDropdown(
         ) {
             coins.forEach { coin ->
                 DropdownMenuItem(
-                    text = {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = coin.name,
-                                    fontWeight = FontWeight.Medium,
-                                    fontSize = 14.sp
-                                )
-                                Text(
-                                    text = coin.symbol,
-                                    fontSize = 11.sp,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                            Column(horizontalAlignment = Alignment.End) {
-                                Text(
-                                    text = "$${String.format("%,.2f", coin.priceUsd)}",
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.Medium
-                                )
-                                val change = coin.changePercent24Hr
-                                Text(
-                                    text = "${if (change >= 0) "▲" else "▼"} ${
-                                        String.format("%.2f", abs(change))
-                                    }%",
-                                    fontSize = 11.sp,
-                                    color = if (change >= 0) Color(0xFF00C853) else Color(0xFFFF1744)
-                                )
-                            }
-                        }
-                    },
+                    text = { CoinDropdownRow(coin) },
                     onClick = {
                         onSelect(coin)
                         expanded = false
@@ -209,9 +185,50 @@ private fun CoinDropdown(
     }
 }
 
+/**
+ * A single row inside the coin dropdown showing name, symbol, price and 24h change.
+ */
+@Composable
+private fun CoinDropdownRow(coin: Coin) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(text = coin.name, fontWeight = FontWeight.Medium, fontSize = 14.sp)
+            Text(
+                text = coin.symbol,
+                fontSize = 11.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        Column(horizontalAlignment = Alignment.End) {
+            Text(
+                text = "$${String.format("%,.2f", coin.priceUsd)}",
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium
+            )
+            val change = coin.changePercent24Hr
+            Text(
+                text = "${if (change >= 0) "▲" else "▼"} ${String.format("%.2f", abs(change))}%",
+                fontSize = 11.sp,
+                color = if (change >= 0) Color(0xFF00C853) else Color(0xFFFF1744)
+            )
+        }
+    }
+}
+
+/**
+ * Preview card shown below the dropdown once a [coin] has been selected.
+ * Renders the coin's price, 24h change, and a 7-day line chart.
+ *
+ * Receives [viewModel] solely to decode the chart data points — no business
+ * logic is invoked here.
+ */
 @Composable
 private fun CoinChartPreview(
-    coin: WidgetCoin,
+    coin: WidgetCoinItem,
     viewModel: CoinChartWidgetViewModel
 ) {
     val dataPoints = remember(coin.dataPointsJson) {
@@ -238,39 +255,7 @@ private fun CoinChartPreview(
             .background(MaterialTheme.colorScheme.surface)
             .padding(12.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    text = coin.coinName,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
-                Text(
-                    text = coin.coinSymbol,
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            Column(horizontalAlignment = Alignment.End) {
-                Text(
-                    text = "$${String.format("%,.2f", coin.priceUsd)}",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp
-                )
-                val change = coin.changePercent24Hr
-                Text(
-                    text = "${if (change >= 0) "▲" else "▼"} ${
-                        String.format("%.2f", abs(change))
-                    }%",
-                    fontSize = 12.sp,
-                    color = if (change >= 0) Color(0xFF00C853) else Color(0xFFFF1744)
-                )
-            }
-        }
+        CoinChartPreviewHeader(coin)
 
         Spacer(Modifier.height(12.dp))
 
@@ -294,6 +279,40 @@ private fun CoinChartPreview(
             fontSize = 10.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+    }
+}
+
+/**
+ * Header row for [CoinChartPreview] showing coin name, symbol, current price and 24h change.
+ */
+@Composable
+private fun CoinChartPreviewHeader(coin: WidgetCoinItem) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
+            Text(text = coin.coinName, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Text(
+                text = coin.coinSymbol,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        Column(horizontalAlignment = Alignment.End) {
+            Text(
+                text = "$${String.format("%,.2f", coin.priceUsd)}",
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp
+            )
+            val change = coin.changePercent24Hr
+            Text(
+                text = "${if (change >= 0) "▲" else "▼"} ${String.format("%.2f", abs(change))}%",
+                fontSize = 12.sp,
+                color = if (change >= 0) Color(0xFF00C853) else Color(0xFFFF1744)
+            )
+        }
     }
 }
 

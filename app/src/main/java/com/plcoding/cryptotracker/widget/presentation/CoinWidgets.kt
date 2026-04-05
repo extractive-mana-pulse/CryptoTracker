@@ -36,8 +36,11 @@ import com.plcoding.cryptotracker.R
 import com.plcoding.cryptotracker.core.presentation.util.getDrawableIdForCoin
 import com.plcoding.cryptotracker.cryto.presentation.coin_detail.ChartStyle
 import com.plcoding.cryptotracker.cryto.presentation.coin_detail.DataPoint
-import com.plcoding.cryptotracker.widget.data.WidgetCoinRepository
+import com.plcoding.cryptotracker.widget.domain.repository.IWidgetCoinRepository
 import org.koin.java.KoinJavaComponent.get
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 private val TEXT_PRIMARY_LIGHT = Color(0xFF020617)
@@ -67,6 +70,12 @@ fun formatTrendFromAverage(dataPoints: List<DataPoint>): Pair<String, Double> {
     val pct = ((last - avg) / avg) * 100.0
     val arrow = if (pct >= 0) "▲" else "▼"
     return arrow to pct
+}
+
+private fun formatUpdatedAtLabel(lastUpdatedMillis: Long): String {
+    if (lastUpdatedMillis <= 0L) return "Never"
+    val formatter = DateTimeFormatter.ofPattern("HH:mm")
+    return formatter.format(Instant.ofEpochMilli(lastUpdatedMillis).atZone(ZoneId.systemDefault()))
 }
 
 @Composable
@@ -107,7 +116,7 @@ class CompactCoinWidget : GlanceAppWidget() {
     override val sizeMode: SizeMode = SizeMode.Exact
     
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val repository = get<WidgetCoinRepository>(WidgetCoinRepository::class.java)
+        val repository = get<IWidgetCoinRepository>(IWidgetCoinRepository::class.java)
         val favorites = repository.getFavorites()
         val preferredFavorite = repository.resolvePreferredFavorite(favorites)
 
@@ -140,10 +149,10 @@ class ChartCoinWidget : GlanceAppWidget() {
     override val sizeMode: SizeMode = SizeMode.Exact
     
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val repository = get<WidgetCoinRepository>(WidgetCoinRepository::class.java)
+        val repository = get<IWidgetCoinRepository>(IWidgetCoinRepository::class.java)
         val favorites = repository.getFavorites()
         val preferredFavorite = repository.resolvePreferredFavorite(favorites)
-        val updatedAtLabel = repository.getLastUpdatedLabel()
+        val updatedAtLabel = formatUpdatedAtLabel(repository.getLastUpdatedMillis())
         val isNightMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
         val style = ChartStyle(
@@ -168,14 +177,15 @@ class ChartCoinWidget : GlanceAppWidget() {
                     if (coin == null) {
                         EmptyFavoritesContent(updatedAtLabel)
                     } else {
-                        val dataPoints = repository.decodeDataPoints(coin.dataPointsJson).ifEmpty { defaultDataPoints() }
+                        val dataPoints = repository.decodeWidgetDataPoints(coin.dataPointsJson)
+                            .map { point -> DataPoint(x = point.x, y = point.y, xLabel = point.xLabel) }
+                            .ifEmpty { defaultDataPoints() }
                         val (trendArrow, trendPct) = formatTrendFromAverage(dataPoints)
                         
                         Column(modifier = GlanceModifier.fillMaxSize()) {
                             Row(
                                 modifier = GlanceModifier
                                     .fillMaxWidth()
-                                    // top padding only for the header row; chart stays in the weighted space below.
                                     .padding(top = 4.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
@@ -236,4 +246,3 @@ class ChartCoinWidget : GlanceAppWidget() {
         }
     }
 }
-
