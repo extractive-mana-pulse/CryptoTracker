@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
  * Contract for all widget coin data operations.
  * Lives in the domain layer — no Android or framework imports.
  */
-interface IWidgetCoinRepository {
+interface WidgetCoinRepository {
 
     // --- Observation ---
 
@@ -93,4 +93,7 @@ interface IWidgetCoinRepository {
      * Returns an empty list if decoding fails.
      */
     fun decodeWidgetDataPoints(json: String): List<WidgetChartPoint>
+
+    /** Refreshes all active widget instances after widget data changes. */
+    suspend fun refreshWidgets()
 }

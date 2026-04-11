@@ -1,25 +1,29 @@
 package com.plcoding.cryptotracker.widget.data.repository
 
+import android.util.Log
 import com.plcoding.cryptotracker.cryto.domain.model.CoinPrice
 import com.plcoding.cryptotracker.widget.data.datasource.WidgetCoinLocalDataSource
 import com.plcoding.cryptotracker.widget.data.datasource.WidgetPreferencesDataSource
 import com.plcoding.cryptotracker.widget.data.mapper.WidgetCoinMapper
 import com.plcoding.cryptotracker.widget.domain.model.WidgetCoinItem
 import com.plcoding.cryptotracker.widget.domain.model.WidgetChartPoint
-import com.plcoding.cryptotracker.widget.domain.repository.IWidgetCoinRepository
+import com.plcoding.cryptotracker.widget.domain.repository.WidgetCoinRepository
+import com.plcoding.cryptotracker.widget.domain.repository.WidgetRefresher
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 /**
- * Concrete implementation of [IWidgetCoinRepository].
+ * Concrete implementation of [WidgetCoinRepository].
  * Coordinates between [WidgetCoinLocalDataSource] (Room) and
  * [WidgetPreferencesDataSource] (SharedPreferences).
- * Contains no Android framework imports itself.
+ * Delegates widget invalidation to [WidgetRefresher].
  */
-class WidgetCoinRepository(
+class DefaultWidgetCoinRepository(
     private val localDataSource: WidgetCoinLocalDataSource,
-    private val preferencesDataSource: WidgetPreferencesDataSource
-) : IWidgetCoinRepository {
+    private val preferencesDataSource: WidgetPreferencesDataSource,
+    private val widgetRefresher: WidgetRefresher
+) : WidgetCoinRepository {
 
     /** Emits the currently selected coin mapped to domain model. */
     override fun observeSelected(): Flow<WidgetCoinItem?> =
@@ -113,4 +117,14 @@ class WidgetCoinRepository(
     /** Decodes chart JSON into domain chart points. */
     override fun decodeWidgetDataPoints(json: String): List<WidgetChartPoint> =
         WidgetCoinMapper.decodeWidgetDataPoints(json)
+
+    /** Refreshes widgets while preserving cancellation and logging non-fatal failures. */
+    override suspend fun refreshWidgets() {
+        try {
+            widgetRefresher.refreshAll()
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            Log.w("WidgetCoinRepository", "Widget refresh failed", e)
+        }
+    }
 }

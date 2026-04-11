@@ -1,8 +1,5 @@
 package com.plcoding.cryptotracker.cryto.presentation.coin_list
 
-import android.content.Context
-import android.util.Log
-import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.cryptotracker.core.domain.util.onError
@@ -11,11 +8,7 @@ import com.plcoding.cryptotracker.cryto.domain.CoinDataSource
 import com.plcoding.cryptotracker.cryto.presentation.coin_detail.DataPoint
 import com.plcoding.cryptotracker.cryto.presentation.model.CoinUiState
 import com.plcoding.cryptotracker.cryto.presentation.model.toCoinUiState
-import com.plcoding.cryptotracker.widget.domain.repository.IWidgetCoinRepository
-import com.plcoding.cryptotracker.widget.presentation.ChartCoinWidget
-import com.plcoding.cryptotracker.widget.presentation.CompactCoinWidget
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
+import com.plcoding.cryptotracker.widget.domain.repository.WidgetCoinRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,18 +17,13 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class CoinListViewModel(
     private val coinDataSource: CoinDataSource,
-    private val widgetCoinRepository: IWidgetCoinRepository,
-    private val appContext: Context
+    private val widgetCoinRepository: WidgetCoinRepository
 ): ViewModel() {
-
-    private val compactCoinWidget = CompactCoinWidget()
-    private val chartCoinWidget = ChartCoinWidget()
 
     private val _state = MutableStateFlow(CoinListState())
     val state = _state
@@ -106,7 +94,7 @@ class CoinListViewModel(
                             selectedCoin = withHistory.firstOrNull { coin -> coin.id == coinUi.id }
                         )
                     }
-                    refreshGlanceWidget()
+                    widgetCoinRepository.refreshWidgets()
                 }
                 .onError { error ->
                     _events.send(CoinListEvent.Error(error))
@@ -126,7 +114,7 @@ class CoinListViewModel(
                         widgetCoinId = if (it.widgetCoinId == coinUi.id) null else it.widgetCoinId
                     )
                 }
-                refreshGlanceWidget()
+                widgetCoinRepository.refreshWidgets()
                 return@launch
             }
 
@@ -155,7 +143,7 @@ class CoinListViewModel(
                             widgetCoinId = preferred
                         )
                     }
-                    refreshGlanceWidget()
+                    widgetCoinRepository.refreshWidgets()
                 }
                 .onError { error ->
                     _events.send(CoinListEvent.Error(error))
@@ -244,20 +232,4 @@ class CoinListViewModel(
         }
     }
 
-    private suspend fun refreshGlanceWidget() {
-        try {
-            withContext(Dispatchers.IO) {
-                val manager = GlanceAppWidgetManager(appContext)
-                manager.getGlanceIds(CompactCoinWidget::class.java).forEach {
-                    compactCoinWidget.update(appContext, it)
-                }
-                manager.getGlanceIds(ChartCoinWidget::class.java).forEach {
-                    chartCoinWidget.update(appContext, it)
-                }
-            }
-        } catch (e: Exception) {
-            if (e is CancellationException) throw e
-            Log.w("CoinListViewModel", "Widget refresh failed", e)
-        }
-    }
 }

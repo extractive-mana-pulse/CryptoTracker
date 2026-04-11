@@ -23,19 +23,6 @@ import com.plcoding.cryptotracker.cryto.presentation.coin_list.CoinListViewModel
 import com.plcoding.cryptotracker.cryto.presentation.coin_list.FavoritesCoinListScreen
 import org.koin.androidx.compose.koinViewModel
 
-/**
- * Adaptive list-detail container for the coin flow.
- *
- * Displays a coin list pane and a coin detail pane using Material adaptive navigation.
- * In favorites mode, the list pane is filtered to only favorited coins.
- *
- * User actions are forwarded to [viewModel]. When a coin is clicked, navigation
- * moves to the detail pane.
- *
- * @param modifier Optional modifier applied to the scaffold root.
- * @param showFavoritesOnly When true, only favorited coins are shown in the list pane.
- * @param viewModel State holder and action handler for list/detail content.
- */
 @Composable
 fun AdaptiveCoinListDetailPane(
     modifier: Modifier = Modifier,

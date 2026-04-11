@@ -7,7 +7,7 @@ import androidx.glance.appwidget.action.ActionCallback
 import com.plcoding.cryptotracker.core.domain.util.Result
 import com.plcoding.cryptotracker.core.domain.util.onSuccess
 import com.plcoding.cryptotracker.cryto.domain.CoinDataSource
-import com.plcoding.cryptotracker.widget.domain.repository.IWidgetCoinRepository
+import com.plcoding.cryptotracker.widget.domain.repository.WidgetCoinRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.java.KoinJavaComponent.get
@@ -22,7 +22,7 @@ import java.time.ZonedDateTime
  * 3. Marks the update timestamp.
  * 4. Re-renders both [CompactCoinWidget] and [ChartCoinWidget].
  *
- * Depends on [IWidgetCoinRepository] — the concrete implementation is never referenced.
+ * Depends on [WidgetCoinRepository] — the concrete implementation is never referenced.
  */
 class RefreshWidgetCallback : ActionCallback {
 
@@ -32,7 +32,7 @@ class RefreshWidgetCallback : ActionCallback {
         parameters: ActionParameters
     ) {
         withContext(Dispatchers.IO) {
-            val repository = get<IWidgetCoinRepository>(IWidgetCoinRepository::class.java)
+            val repository = get<WidgetCoinRepository>(WidgetCoinRepository::class.java)
             val coinDataSource = get<CoinDataSource>(CoinDataSource::class.java)
 
             val favorites = repository.getFavorites()

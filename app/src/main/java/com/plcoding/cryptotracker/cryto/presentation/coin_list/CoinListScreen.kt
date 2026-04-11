@@ -41,7 +41,7 @@ fun CoinListScreen(
                 shape = MaterialTheme.shapes.large
             )
 
-        val coinListContent: @Composable () -> Unit = {
+        Box(modifier = modifier.then(contentModifier)) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -60,9 +60,6 @@ fun CoinListScreen(
                     HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant, thickness = 2.dp)
                 }
             }
-        }
-        Box(modifier = modifier.then(contentModifier)) {
-            coinListContent()
         }
     }
 }

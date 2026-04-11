@@ -1,8 +1,5 @@
 package com.plcoding.cryptotracker.widget.presentation
 
-import android.content.Context
-import android.util.Log
-import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.cryptotracker.core.domain.util.onSuccess
@@ -10,16 +7,13 @@ import com.plcoding.cryptotracker.cryto.domain.CoinDataSource
 import com.plcoding.cryptotracker.cryto.domain.model.Coin
 import com.plcoding.cryptotracker.cryto.presentation.coin_detail.DataPoint
 import com.plcoding.cryptotracker.widget.domain.model.WidgetCoinItem
-import com.plcoding.cryptotracker.widget.domain.repository.IWidgetCoinRepository
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
+import com.plcoding.cryptotracker.widget.domain.repository.WidgetCoinRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.ZonedDateTime
 
 /**
@@ -30,13 +24,12 @@ import java.time.ZonedDateTime
  * - Allow the user to select a coin, fetch its 7-day history, and persist it.
  * - Trigger a Glance widget refresh after each successful selection.
  *
- * Depends on [IWidgetCoinRepository] (domain interface) and [CoinDataSource].
+ * Depends on [WidgetCoinRepository] (domain interface) and [CoinDataSource].
  * No data-layer types leak into this class.
  */
 class CoinChartWidgetViewModel(
     private val coinDataSource: CoinDataSource,
-    private val repository: IWidgetCoinRepository,
-    private val appContext: Context
+    private val repository: WidgetCoinRepository
 ) : ViewModel() {
 
     /**
@@ -91,7 +84,7 @@ class CoinChartWidgetViewModel(
                     history = history
                 )
                 repository.markUpdated()
-                refreshGlanceWidgets()
+                repository.refreshWidgets()
             }
             _isLoading.update { false }
         }
@@ -106,21 +99,4 @@ class CoinChartWidgetViewModel(
             DataPoint(x = it.x, y = it.y, xLabel = it.xLabel)
         }
 
-    /** Notifies all active Glance widget instances to re-render. */
-    private suspend fun refreshGlanceWidgets() {
-        try {
-            withContext(Dispatchers.IO) {
-                val manager = GlanceAppWidgetManager(appContext)
-                manager.getGlanceIds(CompactCoinWidget::class.java).forEach {
-                    CompactCoinWidget().update(appContext, it)
-                }
-                manager.getGlanceIds(ChartCoinWidget::class.java).forEach {
-                    ChartCoinWidget().update(appContext, it)
-                }
-            }
-        } catch (e: Exception) {
-            if (e is CancellationException) throw e
-            Log.w("CoinChartWidgetViewModel", "Widget refresh failed", e)
-        }
-    }
 }

@@ -11,9 +11,11 @@ import com.plcoding.cryptotracker.settings.releases.presentation.ReleaseViewMode
 import com.plcoding.cryptotracker.widget.data.datasource.WidgetCoinLocalDataSource
 import com.plcoding.cryptotracker.widget.data.datasource.WidgetPreferencesDataSource
 import com.plcoding.cryptotracker.widget.data.db.WidgetDatabase
-import com.plcoding.cryptotracker.widget.data.repository.WidgetCoinRepository
-import com.plcoding.cryptotracker.widget.domain.repository.IWidgetCoinRepository
+import com.plcoding.cryptotracker.widget.data.repository.DefaultWidgetCoinRepository
+import com.plcoding.cryptotracker.widget.domain.repository.WidgetCoinRepository
+import com.plcoding.cryptotracker.widget.domain.repository.WidgetRefresher
 import com.plcoding.cryptotracker.widget.presentation.CoinChartWidgetViewModel
+import com.plcoding.cryptotracker.widget.presentation.GlanceWidgetRefresher
 import io.ktor.client.engine.cio.CIO
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -47,7 +49,8 @@ val appModule = module {
     single { WidgetPreferencesDataSource(androidContext()) }
 
     // --- Widget repository ---
-    single<IWidgetCoinRepository> { WidgetCoinRepository(get(), get()) }
+    single<WidgetRefresher> { GlanceWidgetRefresher(androidContext()) }
+    single<WidgetCoinRepository> { DefaultWidgetCoinRepository(get(), get(), get()) }
 
     // --- ViewModels ---
     viewModelOf(::CoinListViewModel)

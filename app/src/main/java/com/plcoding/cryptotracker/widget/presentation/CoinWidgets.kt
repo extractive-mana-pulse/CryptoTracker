@@ -36,13 +36,27 @@ import com.plcoding.cryptotracker.R
 import com.plcoding.cryptotracker.core.presentation.util.getDrawableIdForCoin
 import com.plcoding.cryptotracker.cryto.presentation.coin_detail.ChartStyle
 import com.plcoding.cryptotracker.cryto.presentation.coin_detail.DataPoint
-import com.plcoding.cryptotracker.widget.domain.repository.IWidgetCoinRepository
+import com.plcoding.cryptotracker.widget.domain.repository.WidgetCoinRepository
 import org.koin.java.KoinJavaComponent.get
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+/*
+ * - Defines both home-screen widgets used by the app.
+ * - Compact widget: shows one coin icon + current price.
+ * - Chart widget: shows coin header, price trend (vs average), and a 7-day line chart.
+ *
+ * Data flow:
+ * - Widgets read favorite/selected coin data from `IWidgetCoinRepository` via Koin.
+ * - Chart points are decoded from persisted JSON and mapped to `DataPoint` for drawing.
+ * - Refresh action uses `RefreshWidgetCallback`.
+ *
+ * Why everything is in one file:
+ * - Shared styling/format helpers are reused by both widget classes.
+ */
 
+// Theme-aware colors used by both compact and chart widgets.
 private val TEXT_PRIMARY_LIGHT = Color(0xFF020617)
 private val TEXT_PRIMARY_DARK = Color(0xFFFFFFFF)
 private val TEXT_SECONDARY_LIGHT = Color(0xFF334155)
@@ -57,6 +71,7 @@ private val CHART_SELECTED_DARK = Color(0xFF34D399)
 private val CHART_LABELS_LIGHT = Color(0xFF000000)
 private val CHART_LABELS_DARK = Color(0xFFFFFFFF)
 
+// Small formatting helpers to keep widget UI code readable.
 fun primaryTextColor() = ColorProvider(day = TEXT_PRIMARY_LIGHT, night = TEXT_PRIMARY_DARK)
 fun secondaryTextColor() = ColorProvider(day = TEXT_SECONDARY_LIGHT, night = TEXT_SECONDARY_DARK)
 fun changeTextColor(change: Double) = ColorProvider(day = if (change >= 0) POSITIVE else NEGATIVE, night = if (change >= 0) POSITIVE else NEGATIVE)
@@ -78,6 +93,7 @@ private fun formatUpdatedAtLabel(lastUpdatedMillis: Long): String {
     return formatter.format(Instant.ofEpochMilli(lastUpdatedMillis).atZone(ZoneId.systemDefault()))
 }
 
+// Reusable icon composable for a coin symbol (BTC, ETH, etc.).
 @Composable
 fun CoinIconBadge(coinSymbol: String, iconSize: androidx.compose.ui.unit.Dp) {
     Image(
@@ -87,6 +103,7 @@ fun CoinIconBadge(coinSymbol: String, iconSize: androidx.compose.ui.unit.Dp) {
     )
 }
 
+// Empty state shown when user has no favorites yet.
 @Composable
 fun EmptyFavoritesContent(updatedAtLabel: String) {
     Column(modifier = GlanceModifier.fillMaxSize()) {
@@ -107,16 +124,18 @@ fun EmptyFavoritesContent(updatedAtLabel: String) {
     }
 }
 
+// Fallback chart points so chart widget still renders if data is missing.
 private fun defaultDataPoints() = listOf(
     DataPoint(0f, 59200f, "M"), DataPoint(1f, 60800f, "T"), DataPoint(2f, 60100f, "W"), DataPoint(3f, 61500f, "T"),
     DataPoint(4f, 60900f, "F"), DataPoint(5f, 62100f, "S"), DataPoint(6f, 62430f, "S")
 )
 
+// 2x1-like compact widget: icon + current price for preferred/rotated favorite coin.
 class CompactCoinWidget : GlanceAppWidget() {
     override val sizeMode: SizeMode = SizeMode.Exact
     
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val repository = get<IWidgetCoinRepository>(IWidgetCoinRepository::class.java)
+        val repository = get<WidgetCoinRepository>(WidgetCoinRepository::class.java)
         val favorites = repository.getFavorites()
         val preferredFavorite = repository.resolvePreferredFavorite(favorites)
 
@@ -145,11 +164,12 @@ class CompactCoinWidget : GlanceAppWidget() {
     }
 }
 
+// 4x2-like chart widget: coin header, trend, refresh action, and 7-day line chart.
 class ChartCoinWidget : GlanceAppWidget() {
     override val sizeMode: SizeMode = SizeMode.Exact
     
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val repository = get<IWidgetCoinRepository>(IWidgetCoinRepository::class.java)
+        val repository = get<WidgetCoinRepository>(WidgetCoinRepository::class.java)
         val favorites = repository.getFavorites()
         val preferredFavorite = repository.resolvePreferredFavorite(favorites)
         val updatedAtLabel = formatUpdatedAtLabel(repository.getLastUpdatedMillis())
