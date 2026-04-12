@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Widget preview colors (night) -->
+    <color name="widget_preview_text_primary">#FFFFFFFF</color>
+    <color name="widget_preview_text_secondary">#FFE2E8F0</color>
+    <color name="widget_preview_text_muted">#FF94A3B8</color>
+    <color name="widget_preview_icon_tint">#FFE2E8F0</color>
+    <color name="widget_preview_chart_bar">#FFCBD5E1</color>
+    <color name="widget_preview_change_positive">#FF22C55E</color>
+</resources>
+
