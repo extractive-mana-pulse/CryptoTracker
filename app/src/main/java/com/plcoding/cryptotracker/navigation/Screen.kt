@@ -7,6 +7,8 @@ sealed interface Screen {
     @Serializable
     object CoinList : Screen
     @Serializable
+    object Favorites : Screen
+    @Serializable
     object Settings : Screen
     @Serializable
     object Releases : Screen

@@ -4,4 +4,6 @@ import com.plcoding.cryptotracker.cryto.presentation.model.CoinUiState
 
 sealed interface CoinListAction {
     data class OnCoinClick(val coinUi: CoinUiState): CoinListAction
+    data class OnToggleFavorite(val coinUi: CoinUiState): CoinListAction
+    data class OnSetWidgetCoin(val coinUi: CoinUiState): CoinListAction
 }

@@ -20,14 +20,21 @@ import com.plcoding.cryptotracker.cryto.presentation.coin_list.CoinListAction
 import com.plcoding.cryptotracker.cryto.presentation.coin_list.CoinListEvent
 import com.plcoding.cryptotracker.cryto.presentation.coin_list.CoinListScreen
 import com.plcoding.cryptotracker.cryto.presentation.coin_list.CoinListViewModel
+import com.plcoding.cryptotracker.cryto.presentation.coin_list.FavoritesCoinListScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AdaptiveCoinListDetailPane(
     modifier: Modifier = Modifier,
+    showFavoritesOnly: Boolean = false,
     viewModel: CoinListViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val visibleState = if (showFavoritesOnly) {
+        state.copy(coins = state.coins.filter { it.id in state.favoriteCoinIds })
+    } else {
+        state
+    }
     val context = LocalContext.current
     ObserveAsEvents(events = viewModel.events) { event ->
         when(event) {
@@ -46,24 +53,31 @@ fun AdaptiveCoinListDetailPane(
         navigator = navigator,
         listPane = {
             AnimatedPane {
-                CoinListScreen(
-                    state = state,
-                    onAction = { action ->
-                        viewModel.onAction(action)
-                        when(action) {
-                            is CoinListAction.OnCoinClick -> {
-                                navigator.navigateTo(
-                                    pane = ListDetailPaneScaffoldRole.Detail
-                                )
-                            }
-                        }
+                val handleAction: (CoinListAction) -> Unit = { action ->
+                    viewModel.onAction(action)
+                    if (action is CoinListAction.OnCoinClick) {
+                        navigator.navigateTo(
+                            pane = ListDetailPaneScaffoldRole.Detail
+                        )
                     }
-                )
+                }
+
+                if (showFavoritesOnly) {
+                    FavoritesCoinListScreen(
+                        state = visibleState,
+                        onAction = handleAction
+                    )
+                } else {
+                    CoinListScreen(
+                        state = visibleState,
+                        onAction = handleAction
+                    )
+                }
             }
         },
         detailPane = {
             AnimatedPane {
-                CoinDetailScreen(state = state)
+                CoinDetailScreen(state = visibleState)
             }
         },
         modifier = modifier

@@ -24,32 +24,41 @@ import com.plcoding.cryptotracker.ui.theme.CryptoTrackerTheme
 fun CoinListScreen(
     state: CoinListState,
     onAction: (CoinListAction) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showWidgetAction: Boolean = false,
+    widgetCoinId: String? = null
 ) {
     if (state.isLoading) {
         Box(modifier = modifier.fillMaxSize()) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     } else {
-        LazyColumn(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp, vertical = 4.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.surface,
-                    shape = MaterialTheme.shapes.large
-                )
-            ,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(state.coins) { coinUi ->
+        val contentModifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .background(
+                color = MaterialTheme.colorScheme.surface,
+                shape = MaterialTheme.shapes.large
+            )
 
-                CoinListItem(
-                    coinUiState = coinUi,
-                    onClick = { onAction(CoinListAction.OnCoinClick(coinUi)) },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant, thickness = 2.dp)
+        Box(modifier = modifier.then(contentModifier)) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(state.coins) { coinUi ->
+                    CoinListItem(
+                        coinUiState = coinUi,
+                        onClick = { onAction(CoinListAction.OnCoinClick(coinUi)) },
+                        isFavorite = coinUi.id in state.favoriteCoinIds,
+                        onToggleFavorite = { onAction(CoinListAction.OnToggleFavorite(coinUi)) },
+                        showWidgetAction = showWidgetAction,
+                        isWidgetCoin = widgetCoinId == coinUi.id,
+                        onSetWidgetCoin = { onAction(CoinListAction.OnSetWidgetCoin(coinUi)) },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant, thickness = 2.dp)
+                }
             }
         }
     }

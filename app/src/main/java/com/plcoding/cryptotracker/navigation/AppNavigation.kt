@@ -24,6 +24,9 @@ fun AppNavigation(
         destination?.hasRoute<Screen.CoinList>() == true ->
             Triple(true, "Crypto Tracker", false)
 
+        destination?.hasRoute<Screen.Favorites>() == true ->
+            Triple(true, "Favorites", true)
+
         destination?.hasRoute<Screen.Settings>() == true ->
             Triple(true, "Settings", true)
 
@@ -36,6 +39,9 @@ fun AppNavigation(
     CryptoTrackerDefaultScreen(
         showTopBar = showTopBar,
         topBarTitle = title,
+        onNavigateToFavorites = {
+            navController.navigate(Screen.Favorites)
+        },
         onNavigateToSettings = {
             navController.navigate(Screen.Settings)
         },
@@ -49,6 +55,10 @@ fun AppNavigation(
         ) {
             composable<Screen.CoinList> {
                 AdaptiveCoinListDetailPane()
+            }
+
+            composable<Screen.Favorites> {
+                AdaptiveCoinListDetailPane(showFavoritesOnly = true)
             }
 
             composable<Screen.Settings> {
