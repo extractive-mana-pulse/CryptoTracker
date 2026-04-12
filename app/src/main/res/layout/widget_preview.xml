@@ -35,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:text="Bitcoin"
                 android:textColor="@color/widget_preview_text_primary"
+                android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />

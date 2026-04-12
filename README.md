@@ -1,3 +1,5 @@
+<img width="2730" height="1536" alt="Gemini_Generated_Image_tuks0rtuks0rtuks" src="https://github.com/user-attachments/assets/ed22702e-1624-4864-a704-c115ff6874a4" />
+
 ### 🚀 CryptoTracker 
 
 Crypto Tracker is an application that provides real-time access to a wide range of cryptocurrencies. It allows users to monitor coin prices and perform basic analysis using interactive charts that visualize price movements over selected time periods.
@@ -61,6 +63,7 @@ You can download the latest stable version of the app from the GitHub Releases p
 
 👉 **[Download here](https://github.com/extractive-mana-pulse/CryptoTracker/releases/tag/v1.0.0)**
 
+> [!Tip]
 > All APK files are published under the **Releases** section, along with version notes and changelogs.
 
 ---
