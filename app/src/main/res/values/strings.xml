@@ -12,5 +12,6 @@
     <string name="version_info">Version Info</string>
     <string name="stable_release">Latest stable release\n</string>
     <string name="available_update">NEW UPDATE AVAILABLE</string>
+    <string name="compact_widget_xml_info">Shows favorite crypto coins on your home screen widget. Only Price</string>
     <string name="widget_xml_info">Shows favorite crypto coins on your home screen widget.</string>
 </resources>

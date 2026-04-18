@@ -2,32 +2,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="320dp"
-    android:layout_height="200dp"
+    android:layout_height="240dp"
     android:background="@drawable/widget_background"
-    android:padding="16dp">
+    android:padding="14dp">
 
-    <!-- Header: coin icon + name + symbol -->
     <LinearLayout
         android:id="@+id/header_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_alignParentTop="true">
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/coin_icon"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/btc" />
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:src="@drawable/btc"
+            android:importantForAccessibility="no" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="8dp">
+            android:layout_marginStart="10dp">
 
             <TextView
                 android:id="@+id/coin_name"
@@ -35,8 +34,7 @@
                 android:layout_height="wrap_content"
                 android:text="Bitcoin"
                 android:textColor="@color/widget_preview_text_primary"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
 
@@ -45,13 +43,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="BTC"
-                android:textColor="@color/widget_preview_text_secondary"
-                android:textSize="10sp"
+                android:textColor="@color/widget_preview_text_muted"
+                android:textSize="11sp"
+                android:layout_marginTop="1dp"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
-        <!-- Price + change badge -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,10 +60,11 @@
                 android:id="@+id/coin_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="$62,430"
+                android:text="$77,100.24"
                 android:textColor="@color/widget_preview_text_primary"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
+                android:letterSpacing="-0.02"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -73,266 +72,209 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:paddingStart="6dp"
-                android:paddingEnd="6dp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp"
-                android:text="▲ 2.4%"
+                android:text="▲ 4.66%"
                 android:textColor="@color/widget_preview_change_positive"
-                android:textSize="9sp"
+                android:textSize="11sp"
                 android:textStyle="bold"
+                android:layout_marginTop="1dp"
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/refresh_button"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
             android:layout_marginStart="8dp"
             android:background="@android:color/transparent"
-            android:contentDescription="Refresh"
             android:src="@drawable/twotone_refresh_24"
             android:tint="@color/widget_preview_icon_tint"
-            tools:ignore="HardcodedText,UseAppTint" />
+            android:contentDescription="Refresh"
+            tools:ignore="UseAppTint" />
 
     </LinearLayout>
 
-    <!-- Chart area -->
+    <LinearLayout
+        android:id="@+id/x_axis_row"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="48dp"
+        android:orientation="horizontal">
+
+        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:text="04/11&#10;10:00" android:textColor="@color/widget_preview_text_muted"
+            android:textSize="6sp" android:gravity="top|center_horizontal" tools:ignore="HardcodedText" />
+        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:text="04/11&#10;11:00" android:textColor="@color/widget_preview_text_muted"
+            android:textSize="6sp" android:gravity="top|center_horizontal" tools:ignore="HardcodedText" />
+        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:text="04/11&#10;17:00" android:textColor="@color/widget_preview_text_muted"
+            android:textSize="6sp" android:gravity="top|center_horizontal" tools:ignore="HardcodedText" />
+        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:text="04/11&#10;23:00" android:textColor="@color/widget_preview_text_muted"
+            android:textSize="6sp" android:gravity="top|center_horizontal" tools:ignore="HardcodedText" />
+        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:text="04/12&#10;05:00" android:textColor="@color/widget_preview_text_muted"
+            android:textSize="6sp" android:gravity="top|center_horizontal" tools:ignore="HardcodedText" />
+        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:text="04/12&#10;11:00" android:textColor="@color/widget_preview_text_muted"
+            android:textSize="6sp" android:gravity="top|center_horizontal" tools:ignore="HardcodedText" />
+        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:text="04/12&#10;17:00" android:textColor="@color/widget_preview_text_muted"
+            android:textSize="6sp" android:gravity="top|center_horizontal" tools:ignore="HardcodedText" />
+        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:text="04/12&#10;23:00" android:textColor="@color/widget_preview_text_muted"
+            android:textSize="6sp" android:gravity="top|center_horizontal" tools:ignore="HardcodedText" />
+        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:text="04/13&#10;05:00" android:textColor="@color/widget_preview_text_muted"
+            android:textSize="6sp" android:gravity="top|center_horizontal" tools:ignore="HardcodedText" />
+        <TextView android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"
+            android:text="04/13&#10;11:00" android:textColor="@color/widget_preview_text_muted"
+            android:textSize="6sp" android:gravity="top|center_horizontal" tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/chart_area"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="120dp"
         android:layout_below="@id/header_layout"
-        android:layout_above="@id/footer_layout"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="6dp"
-        android:baselineAligned="false"
+        android:layout_above="@id/x_axis_row"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal"
-        android:gravity="bottom">
+        android:baselineAligned="false"
+        android:gravity="top">
 
-        <!-- Y axis labels -->
         <LinearLayout
-            android:layout_width="36dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
+            android:layout_width="48dp"
+            android:layout_height="120dp"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="65K"
-                android:textColor="@color/widget_preview_text_muted"
-                android:textSize="7sp"
-                android:gravity="center"
-                tools:ignore="HardcodedText" />
+            <TextView android:layout_width="match_parent" android:layout_height="30dp"
+                android:text="77,472$" android:textColor="@color/widget_preview_text_muted"
+                android:textSize="7sp" android:gravity="start|top" tools:ignore="HardcodedText" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="62K"
-                android:textColor="@color/widget_preview_text_muted"
-                android:textSize="7sp"
-                android:gravity="center"
-                tools:ignore="HardcodedText" />
+            <TextView android:layout_width="match_parent" android:layout_height="30dp"
+                android:text="75,233$" android:textColor="@color/widget_preview_text_muted"
+                android:textSize="7sp" android:gravity="start|top" tools:ignore="HardcodedText" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="59K"
-                android:textColor="@color/widget_preview_text_muted"
-                android:textSize="7sp"
-                android:gravity="center"
-                tools:ignore="HardcodedText" />
+            <TextView android:layout_width="match_parent" android:layout_height="30dp"
+                android:text="72,994$" android:textColor="@color/widget_preview_text_muted"
+                android:textSize="7sp" android:gravity="start|top" tools:ignore="HardcodedText" />
+
+            <TextView android:layout_width="match_parent" android:layout_height="30dp"
+                android:text="70,755$" android:textColor="@color/widget_preview_text_muted"
+                android:textSize="7sp" android:gravity="start|top" tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
-        <!-- Bars -->
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="120dp"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:gravity="bottom"
-            android:layout_marginStart="4dp">
+            android:layout_marginStart="4dp"
+            android:clipChildren="false">
 
-            <!-- Mon -->
-            <LinearLayout
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="bottom|center_horizontal">
-                <TextView
-                    android:layout_width="3dp"
-                    android:layout_height="42dp"
-                    android:background="@color/widget_preview_chart_bar"
-                    android:text=" " />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="M"
-                    android:textColor="@color/widget_preview_text_muted"
-                    android:textSize="7sp"
-                    android:layout_marginTop="4dp"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
+            <View android:layout_width="match_parent" android:layout_height="0.6dp"
+                android:layout_alignParentTop="true" android:layout_marginTop="0dp"
+                android:background="@color/widget_preview_text_muted" android:alpha="0.35" />
+            <View android:layout_width="match_parent" android:layout_height="0.6dp"
+                android:layout_alignParentTop="true" android:layout_marginTop="30dp"
+                android:background="@color/widget_preview_text_muted" android:alpha="0.35" />
+            <View android:layout_width="match_parent" android:layout_height="0.6dp"
+                android:layout_alignParentTop="true" android:layout_marginTop="60dp"
+                android:background="@color/widget_preview_text_muted" android:alpha="0.35" />
+            <View android:layout_width="match_parent" android:layout_height="0.6dp"
+                android:layout_alignParentTop="true" android:layout_marginTop="90dp"
+                android:background="@color/widget_preview_text_muted" android:alpha="0.35" />
 
-            <!-- Tue -->
-            <LinearLayout
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="bottom|center_horizontal">
-                <TextView
-                    android:layout_width="3dp"
-                    android:layout_height="42dp"
-                    android:background="@color/widget_preview_chart_bar"
-                    android:text=" " />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="T"
-                    android:textColor="@color/widget_preview_text_muted"
-                    android:textSize="7sp"
-                    android:layout_marginTop="4dp"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
+            <View android:layout_width="25dp" android:layout_height="1.8dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="10dp" android:layout_marginTop="37dp"
+                android:background="#FF2563EB"
+                android:rotation="4.76"
+                android:transformPivotX="0dp" android:transformPivotY="0.9dp" />
 
-            <!-- Wed -->
-            <LinearLayout
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="bottom|center_horizontal">
-                <TextView
-                    android:layout_width="3dp"
-                    android:layout_height="42dp"
-                    android:background="@color/widget_preview_chart_bar"
-                    android:text=" " />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="W"
-                    android:textColor="@color/widget_preview_text_muted"
-                    android:textSize="7sp"
-                    android:layout_marginTop="4dp"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
+            <View android:layout_width="25dp" android:layout_height="1.8dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="34dp" android:layout_marginTop="39dp"
+                android:background="#FF2563EB"
+                android:rotation="-4.76"
+                android:transformPivotX="0dp" android:transformPivotY="0.9dp" />
 
-            <!-- Thu -->
-            <LinearLayout
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="bottom|center_horizontal">
-                <TextView
-                    android:layout_width="3dp"
-                    android:layout_height="42dp"
-                    android:background="@color/widget_preview_chart_bar"
-                    android:text=" " />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="T"
-                    android:textColor="@color/widget_preview_text_muted"
-                    android:textSize="7sp"
-                    android:layout_marginTop="4dp"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
+            <View android:layout_width="25dp" android:layout_height="1.8dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="58dp" android:layout_marginTop="37dp"
+                android:background="#FF2563EB"
+                android:rotation="-7.13"
+                android:transformPivotX="0dp" android:transformPivotY="0.9dp" />
 
-            <!-- Fri -->
-            <LinearLayout
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="bottom|center_horizontal">
-                <TextView
-                    android:layout_width="3dp"
-                    android:layout_height="42dp"
-                    android:background="@color/widget_preview_chart_bar"
-                    android:text=" " />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="F"
-                    android:textColor="@color/widget_preview_text_muted"
-                    android:textSize="7sp"
-                    android:layout_marginTop="4dp"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
+            <View android:layout_width="25dp" android:layout_height="1.8dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="82dp" android:layout_marginTop="34dp"
+                android:background="#FF2563EB"
+                android:rotation="-4.76"
+                android:transformPivotX="0dp" android:transformPivotY="0.9dp" />
 
-            <!-- Sat -->
-            <LinearLayout
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="bottom|center_horizontal">
-                <TextView
-                    android:layout_width="3dp"
-                    android:layout_height="42dp"
-                    android:background="@color/widget_preview_chart_bar"
-                    android:text=" " />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="S"
-                    android:textColor="@color/widget_preview_text_muted"
-                    android:textSize="7sp"
-                    android:layout_marginTop="4dp"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
+            <View android:layout_width="33dp" android:layout_height="1.8dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="106dp" android:layout_marginTop="32dp"
+                android:background="#FF2563EB"
+                android:rotation="42.51"
+                android:transformPivotX="0dp" android:transformPivotY="0.9dp" />
 
-            <!-- Sun (selected/today) -->
-            <LinearLayout
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="bottom|center_horizontal">
-                <TextView
-                    android:layout_width="3dp"
-                    android:layout_height="42dp"
-                    android:background="@color/widget_preview_chart_bar"
-                    android:text=" " />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="S"
-                    android:textColor="@color/widget_preview_text_primary"
-                    android:textSize="7sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="4dp"
-                    tools:ignore="HardcodedText" />
-            </LinearLayout>
+            <View android:layout_width="25dp" android:layout_height="1.8dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="130dp" android:layout_marginTop="54dp"
+                android:background="#FF2563EB"
+                android:rotation="11.77"
+                android:transformPivotX="0dp" android:transformPivotY="0.9dp" />
 
-        </LinearLayout>
+            <View android:layout_width="25dp" android:layout_height="1.8dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="154dp" android:layout_marginTop="59dp"
+                android:background="#FF2563EB"
+                android:rotation="14.04"
+                android:transformPivotX="0dp" android:transformPivotY="0.9dp" />
+
+            <View android:layout_width="25dp" android:layout_height="1.8dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="178dp" android:layout_marginTop="65dp"
+                android:background="#FF2563EB"
+                android:rotation="4.76"
+                android:transformPivotX="0dp" android:transformPivotY="0.9dp" />
+
+            <View android:layout_width="25dp" android:layout_height="1.8dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="202dp" android:layout_marginTop="67dp"
+                android:background="#FF2563EB"
+                android:rotation="2.39"
+                android:transformPivotX="0dp" android:transformPivotY="0.9dp" />
+
+            <View android:layout_width="5dp" android:layout_height="5dp" android:background="@drawable/widget_chart_dot"
+                android:layout_alignParentTop="true" android:layout_marginStart="8dp" android:layout_marginTop="36dp" />
+            <View android:layout_width="5dp" android:layout_height="5dp" android:background="@drawable/widget_chart_dot"
+                android:layout_alignParentTop="true" android:layout_marginStart="32dp" android:layout_marginTop="38dp" />
+            <View android:layout_width="5dp" android:layout_height="5dp" android:background="@drawable/widget_chart_dot"
+                android:layout_alignParentTop="true" android:layout_marginStart="56dp" android:layout_marginTop="36dp" />
+            <View android:layout_width="5dp" android:layout_height="5dp" android:background="@drawable/widget_chart_dot"
+                android:layout_alignParentTop="true" android:layout_marginStart="80dp" android:layout_marginTop="33dp" />
+            <View android:layout_width="5dp" android:layout_height="5dp" android:background="@drawable/widget_chart_dot"
+                android:layout_alignParentTop="true" android:layout_marginStart="104dp" android:layout_marginTop="31dp" />
+            <View android:layout_width="5dp" android:layout_height="5dp" android:background="@drawable/widget_chart_dot"
+                android:layout_alignParentTop="true" android:layout_marginStart="128dp" android:layout_marginTop="53dp" />
+            <View android:layout_width="5dp" android:layout_height="5dp" android:background="@drawable/widget_chart_dot"
+                android:layout_alignParentTop="true" android:layout_marginStart="152dp" android:layout_marginTop="58dp" />
+            <View android:layout_width="5dp" android:layout_height="5dp" android:background="@drawable/widget_chart_dot"
+                android:layout_alignParentTop="true" android:layout_marginStart="176dp" android:layout_marginTop="64dp" />
+            <View android:layout_width="5dp" android:layout_height="5dp" android:background="@drawable/widget_chart_dot"
+                android:layout_alignParentTop="true" android:layout_marginStart="200dp" android:layout_marginTop="66dp" />
+            <View android:layout_width="5dp" android:layout_height="5dp" android:background="@drawable/widget_chart_dot"
+                android:layout_alignParentTop="true" android:layout_marginStart="224dp" android:layout_marginTop="67dp" />
+
+        </RelativeLayout>
 
     </LinearLayout>
-
-    <!-- Footer: last updated -->
-    <TextView
-        android:id="@+id/footer_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:text="Updated just now"
-        android:textColor="@color/widget_preview_text_muted"
-        android:textSize="8sp"
-        tools:ignore="HardcodedText" />
-
-    <!-- Timeframe label bottom right -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:text="7D"
-        android:textColor="@color/widget_preview_text_secondary"
-        android:textSize="8sp"
-        android:textStyle="bold"
-        tools:ignore="HardcodedText" />
 
 </RelativeLayout>

@@ -1,7 +1,6 @@
 package com.plcoding.cryptotracker.widget.presentation
 
 import android.content.Context
-import android.util.Log
 import androidx.glance.GlanceId
 import androidx.glance.action.ActionParameters
 import androidx.glance.appwidget.action.ActionCallback
@@ -15,17 +14,6 @@ import kotlinx.coroutines.withContext
 import org.koin.java.KoinJavaComponent.get
 import java.time.ZonedDateTime
 
-/**
- * Glance [ActionCallback] triggered when the user taps the refresh button on any widget.
- *
- * For each favorited coin it:
- * 1. Fetches the latest 7-day price history.
- * 2. Updates the persisted price using freshly fetched coin data where available.
- * 3. Marks the update timestamp.
- * 4. Re-renders both [CompactCoinWidget] and [ChartCoinWidget].
- *
- * Depends on [WidgetCoinRepository] — the concrete implementation is never referenced.
- */
 class RefreshWidgetCallback : ActionCallback {
 
     override suspend fun onAction(
@@ -40,7 +28,6 @@ class RefreshWidgetCallback : ActionCallback {
 
                 val favorites = repository.getFavorites()
                 if (favorites.isNotEmpty()) {
-                    // Fetch latest prices once, then update each favorite with fresh history.
                     val latestCoinsById = when (val result = coinDataSource.getCoins()) {
                         is Result.Success -> result.data.associateBy { it.id }
                         is Result.Error -> emptyMap()
@@ -70,7 +57,6 @@ class RefreshWidgetCallback : ActionCallback {
             }
         } catch (e: Exception) {
             if (e is CancellationException) throw e
-            Log.w("RefreshWidgetCallback", "Widget refresh action failed", e)
         }
     }
 }
