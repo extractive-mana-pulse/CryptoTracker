@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="320dp"
+    android:layout_height="160dp"
+    android:background="@drawable/widget_background"
+    android:padding="20dp">
+
+    <!-- Coin icon — left, vertically centred -->
+    <ImageView
+        android:id="@+id/coin_icon"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/btc"
+        android:importantForAccessibility="no" />
+
+    <!-- Refresh button — right, vertically centred -->
+    <ImageButton
+        android:id="@+id/refresh_button"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:background="@android:color/transparent"
+        android:src="@drawable/twotone_refresh_24"
+        android:tint="@color/widget_preview_icon_tint"
+        android:contentDescription="Refresh"
+        tools:ignore="UseAppTint" />
+
+    <!-- Price + symbol — between icon and refresh, centred vertically -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/coin_icon"
+        android:layout_toStartOf="@id/refresh_button"
+        android:layout_marginStart="14dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/coin_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$77,448.00"
+            android:textColor="@color/widget_preview_text_primary"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:letterSpacing="-0.02"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/coin_symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="BTC"
+            android:textColor="@color/widget_preview_text_muted"
+            android:textSize="12sp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+</RelativeLayout>
