@@ -34,7 +34,7 @@
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/compact_coin_widget"/>
+                android:resource="@xml/compact_coin_widget_preview"/>
         </receiver>
 
         <receiver
@@ -45,7 +45,7 @@
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/chart_coin_widget"/>
+                android:resource="@xml/chart_coin_widget_preview"/>
         </receiver>
 
     </application>
