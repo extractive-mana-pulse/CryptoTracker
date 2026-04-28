@@ -1,6 +1,6 @@
 package com.plcoding.cryptotracker
 
-import AppNavigation
+import com.plcoding.cryptotracker.navigation.AppNavigation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
